@@ -1,0 +1,20 @@
+name: Daily Sender 06:30 BRT
+
+on:
+  schedule:
+    - cron: "30 9 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  call-function:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Supabase Edge Function
+        run: |
+          set -e
+          echo "URL=>>${{ secrets.SUPABASE_FUNCTION_URL }}<<"
+          curl -i -sS -X POST "${{ secrets.SUPABASE_FUNCTION_URL }}" \
+            -H "Content-Type: application/json" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            --data '{}'
