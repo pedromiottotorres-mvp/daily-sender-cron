@@ -1,11 +1,19 @@
-name: Daily Sender Manual Test
+name: Daily Sender 06:30 BRT
 
 on:
   workflow_dispatch: {}
+  schedule:
+    - cron: "30 9 * * *"
 
 jobs:
-  ping:
+  call:
     runs-on: ubuntu-latest
     steps:
-      - name: Hello
-        run: echo "workflow ok"
+      - name: Call daily_sender
+        run: |
+          set -e
+          curl -i -sS -X POST "https://quggzwgrqacahcuqupx1.functions.supabase.co/daily_sender" \
+            -H "Content-Type: application/json" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            --data '{}'
