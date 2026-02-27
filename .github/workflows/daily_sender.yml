@@ -1,11 +1,28 @@
-name: Daily Sender Manual Test
+name: Daily Sender 06:30 BRT
 
 on:
   workflow_dispatch: {}
+  schedule:
+    - cron: "30 9 * * *"
 
 jobs:
-  ping:
+  call:
     runs-on: ubuntu-latest
     steps:
-      - name: ok
-        run: echo "workflow ok"
+      - name: Call daily_sender (DNS hardened)
+        run: |
+          set -e
+          HOST="quggzwgrqacahcuqupx1.supabase.co"
+          URL="https://${HOST}/functions/v1/daily_sender"
+
+          IP=$(python3 -c "import json,urllib.request; d=json.loads(urllib.request.urlopen('https://dns.google/resolve?name='+ '${HOST}' +'&type=A',timeout=10).read().decode()); print([a['data'] for a in d.get('Answer',[]) if a.get('type')==1][0])")
+
+          echo "Resolved ${HOST} -> ${IP}"
+
+          curl -i -sS --retry 5 --retry-all-errors --retry-delay 2 \
+            --resolve "${HOST}:443:${IP}" \
+            -X POST "${URL}" \
+            -H "Content-Type: application/json" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            --data '{}'
