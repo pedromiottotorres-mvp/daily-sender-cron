@@ -1,18 +1,16 @@
 name: Daily Sender 06:30 BRT
 
 on:
+  workflow_dispatch: {}
   schedule:
     - cron: "30 9 * * *"
-  workflow_dispatch: {}
 
 jobs:
-  call-function:
+  call:
     runs-on: ubuntu-latest
     steps:
-      - name: Call Supabase Edge Function
+      - name: Call daily_sender
         run: |
-          set -e
-          echo "URL=>>${{ secrets.SUPABASE_FUNCTION_URL }}<<"
           curl -i -sS -X POST "https://quggzwgrqacahcuqupx1.supabase.com/functions/v1/daily_sender" \
             -H "Content-Type: application/json" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
