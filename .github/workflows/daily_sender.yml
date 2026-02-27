@@ -3,7 +3,7 @@ name: Daily Sender 06:30 BRT
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "30 9 * * *"
+    - cron: "30 9 * * *" # 09:30 UTC ~ 06:30 BRT
 
 jobs:
   call:
@@ -12,7 +12,7 @@ jobs:
       - name: Call daily_sender (show response)
         run: |
           set -e
-          curl -i -sS -X POST "https://quggzwgrqacahcuqupx1.functions.supabase.co/daily_sender" \
+          curl -i -sS -X POST "https://quggzwgrqacahcuqupx1.supabase.co/functions/v1/daily_sender" \
             -H "Content-Type: application/json" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
