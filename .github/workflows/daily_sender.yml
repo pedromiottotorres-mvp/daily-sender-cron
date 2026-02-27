@@ -13,7 +13,7 @@ jobs:
         run: |
           set -e
           echo "URL=>>${{ secrets.SUPABASE_FUNCTION_URL }}<<"
-          curl -i -sS -X POST "${{ secrets.SUPABASE_FUNCTION_URL }}" \
+          curl -i -sS -X POST "https://quggzwgrqacahcuqupx1.supabase.com/functions/v1/daily_sender" \
             -H "Content-Type: application/json" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
